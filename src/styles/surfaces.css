@@ -1,0 +1,98 @@
+/**
+ * OPTIONAL: Premium ambient elevation system.
+ *
+ * Comment out `@import "./styles/surfaces.css"` in index.css to revert to
+ * default Tailwind shadows and shadcn ring-only cards.
+ *
+ * ─── Knobs — edit shadow stacks and ring softness ───
+ */
+:root {
+  /* Matches shadcn ring-foreground/10 hairline on elevated surfaces */
+  --surface-border: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --surface-ring: var(--surface-border);
+
+  --surface-shadow-1:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 1px 1px color-mix(in srgb, var(--foreground) 2.5%, transparent),
+    0 2px 6px color-mix(in srgb, var(--foreground) 2.5%, transparent),
+    0 12px 32px color-mix(in srgb, var(--foreground) 3.5%, transparent),
+    0 24px 64px color-mix(in srgb, var(--foreground) 2.5%, transparent);
+
+  --surface-shadow-2:
+    0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent),
+    0 4px 12px color-mix(in srgb, var(--foreground) 4%, transparent),
+    0 16px 40px color-mix(in srgb, var(--foreground) 2.5%, transparent);
+
+  --surface-shadow-3:
+    0 1px 2px color-mix(in srgb, var(--foreground) 5%, transparent),
+    0 6px 16px color-mix(in srgb, var(--foreground) 5%, transparent),
+    0 20px 48px color-mix(in srgb, var(--foreground) 4%, transparent);
+
+  --surface-shadow-4:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent),
+    0 8px 24px color-mix(in srgb, var(--foreground) 6%, transparent),
+    0 24px 64px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+.dark {
+  --surface-border: color-mix(in srgb, var(--foreground) 12%, transparent);
+  --surface-ring: var(--surface-border);
+
+  --surface-shadow-1:
+    0 1px 2px rgb(0 0 0 / 0.2),
+    0 4px 12px rgb(0 0 0 / 0.16),
+    0 16px 40px rgb(0 0 0 / 0.12);
+
+  --surface-shadow-2:
+    0 1px 2px rgb(0 0 0 / 0.22),
+    0 4px 12px rgb(0 0 0 / 0.18),
+    0 16px 40px rgb(0 0 0 / 0.14);
+
+  --surface-shadow-3:
+    0 1px 2px rgb(0 0 0 / 0.24),
+    0 6px 16px rgb(0 0 0 / 0.2),
+    0 20px 48px rgb(0 0 0 / 0.16);
+
+  --surface-shadow-4:
+    0 1px 2px rgb(0 0 0 / 0.26),
+    0 8px 24px rgb(0 0 0 / 0.22),
+    0 24px 64px rgb(0 0 0 / 0.18);
+}
+
+/* Remap Tailwind shadow utilities to elevation tokens */
+@theme inline {
+  --shadow-sm: var(--surface-shadow-2);
+  --shadow-md: var(--surface-shadow-2);
+  --shadow-lg: var(--surface-shadow-3);
+  --shadow-xl: var(--surface-shadow-4);
+}
+
+/* Ring utilities use box-shadow — include hairline in the stack so it isn't replaced */
+[data-slot="card"] {
+  box-shadow: 0 0 0 1px var(--surface-border), var(--surface-shadow-1);
+}
+
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"] {
+  box-shadow: 0 0 0 1px var(--surface-border), var(--surface-shadow-4);
+}
+
+/* Soften shadcn ring hairlines on elevated surfaces */
+[data-slot="card"],
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"],
+[data-slot="sheet-content"],
+[data-slot="popover-content"],
+[data-slot="hover-card-content"],
+[data-slot="select-content"],
+[data-slot="combobox-content"],
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"],
+[data-slot="context-menu-content"],
+[data-slot="context-menu-sub-content"],
+[data-slot="menubar-content"],
+[data-slot="menubar-sub-content"],
+[data-slot="toast"] {
+  --tw-ring-color: var(--surface-ring);
+}

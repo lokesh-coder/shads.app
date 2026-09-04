@@ -1,0 +1,41 @@
+/**
+ * OPTIONAL: Type scale — root size, rhythm, display sizes, icon stroke.
+ * Values are overridden at runtime when the typography layer is enabled.
+ */
+:root {
+  --type-root-size: 16px;
+  --type-heading-tracking: -0.02em;
+  --type-body-leading: 1.5;
+  --type-heading-leading: 1.2;
+  --type-icon-stroke: 2;
+  --type-display-1: clamp(1.875rem, 3vw, 2.25rem);
+  --type-display-2: clamp(1.5rem, 2.5vw, 1.875rem);
+  --type-display-3: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+@layer base {
+  html {
+    font-size: var(--type-root-size);
+  }
+
+  body {
+    line-height: var(--type-body-leading);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-heading {
+    letter-spacing: var(--type-heading-tracking);
+    line-height: var(--type-heading-leading);
+  }
+}
+
+@layer utilities {
+  [data-slot] svg:not([class*="size-"]) {
+    stroke-width: var(--type-icon-stroke);
+  }
+}

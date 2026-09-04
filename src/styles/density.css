@@ -1,0 +1,179 @@
+/**
+ * OPTIONAL: Control density — layout padding and primary control heights.
+ *
+ * Comment out `@import "./styles/density.css"` in index.css to revert to
+ * shadcn default component sizes.
+ */
+:root {
+  --density-control-height-xs: 1.5rem;
+  --density-control-height-sm: 1.75rem;
+  --density-control-height: 2rem;
+  --density-control-height-lg: 2.25rem;
+  --density-control-px: 0.625rem;
+  --density-control-py: 0.375rem;
+  --density-control-text: 0.875rem;
+  --density-control-gap: 0.375rem;
+  --density-icon-size: 1rem;
+  --density-card-spacing: 1rem;
+  --density-card-spacing-sm: 0.75rem;
+  --density-alert-px: 0.625rem;
+  --density-alert-py: 0.5rem;
+  --density-table-row: 2.5rem;
+  --density-table-cell-px: 0.5rem;
+  --density-textarea-min: 4rem;
+  --density-field-gap: 0.5rem;
+  --density-field-group-gap: 1.25rem;
+  --density-accordion-py: 0.625rem;
+}
+
+@layer utilities {
+  [data-slot="button"][data-size="default"],
+  [data-slot="button"]:not([data-size]) {
+    height: var(--density-control-height) !important;
+    min-height: var(--density-control-height) !important;
+  }
+
+  [data-slot="button"][data-size="xs"] {
+    height: var(--density-control-height-xs) !important;
+    min-height: var(--density-control-height-xs) !important;
+  }
+
+  [data-slot="button"][data-size="sm"] {
+    height: var(--density-control-height-sm) !important;
+    min-height: var(--density-control-height-sm) !important;
+  }
+
+  [data-slot="button"][data-size="lg"] {
+    height: var(--density-control-height-lg) !important;
+    min-height: var(--density-control-height-lg) !important;
+  }
+
+  [data-slot="button"][data-size="icon"] {
+    width: var(--density-control-height) !important;
+    height: var(--density-control-height) !important;
+    min-width: var(--density-control-height) !important;
+    min-height: var(--density-control-height) !important;
+  }
+
+  [data-slot="button"][data-size="icon-xs"] {
+    width: var(--density-control-height-xs) !important;
+    height: var(--density-control-height-xs) !important;
+    min-width: var(--density-control-height-xs) !important;
+    min-height: var(--density-control-height-xs) !important;
+  }
+
+  [data-slot="button"][data-size="icon-sm"] {
+    width: var(--density-control-height-sm) !important;
+    height: var(--density-control-height-sm) !important;
+    min-width: var(--density-control-height-sm) !important;
+    min-height: var(--density-control-height-sm) !important;
+  }
+
+  [data-slot="button"][data-size="icon-lg"] {
+    width: var(--density-control-height-lg) !important;
+    height: var(--density-control-height-lg) !important;
+    min-width: var(--density-control-height-lg) !important;
+    min-height: var(--density-control-height-lg) !important;
+  }
+
+  [data-slot="input"] {
+    height: var(--density-control-height) !important;
+  }
+
+  [data-slot="textarea"] {
+    min-height: var(--density-textarea-min) !important;
+  }
+
+  [data-slot="select-trigger"][data-size="default"],
+  [data-slot="select-trigger"]:not([data-size]) {
+    height: var(--density-control-height) !important;
+  }
+
+  [data-slot="select-trigger"][data-size="sm"] {
+    height: var(--density-control-height-sm) !important;
+  }
+
+  [data-slot="card"] {
+    --card-spacing: var(--density-card-spacing) !important;
+  }
+
+  [data-slot="card"][data-size="sm"] {
+    --card-spacing: var(--density-card-spacing-sm) !important;
+  }
+
+  [data-slot="alert"] {
+    padding: var(--density-alert-py) var(--density-alert-px) !important;
+  }
+
+  [data-slot="table-head"] {
+    height: var(--density-table-row) !important;
+    padding-inline: var(--density-table-cell-px) !important;
+  }
+
+  [data-slot="table-cell"] {
+    padding: var(--density-table-cell-px) !important;
+  }
+
+  [data-slot="field-group"] {
+    gap: var(--density-field-group-gap) !important;
+  }
+
+  [data-slot="field"] {
+    gap: var(--density-field-gap) !important;
+  }
+
+  [data-slot="accordion-trigger"] {
+    padding-block: var(--density-accordion-py) !important;
+  }
+
+  [data-slot="accordion-content"] {
+    padding-bottom: var(--density-field-gap) !important;
+  }
+
+  [data-slot="dialog-content"],
+  [data-slot="alert-dialog-content"] {
+    padding: var(--density-card-spacing) !important;
+    gap: var(--density-field-group-gap) !important;
+  }
+
+  [data-slot="sheet-content"] {
+    padding: var(--density-card-spacing) !important;
+    gap: var(--density-field-group-gap) !important;
+  }
+
+  [data-slot="popover-content"] {
+    padding: var(--density-card-spacing-sm) !important;
+    gap: var(--density-field-gap) !important;
+  }
+
+  [data-slot="tabs-list"] {
+    height: var(--density-control-height) !important;
+  }
+
+  [data-slot="tabs-trigger"] {
+    height: calc(var(--density-control-height) - 0.5rem) !important;
+  }
+
+  [data-slot="tabs-content"] {
+    padding-top: var(--density-field-gap) !important;
+  }
+
+  [data-slot="field-set"] {
+    gap: var(--density-field-group-gap) !important;
+  }
+
+  [data-slot="breadcrumb-list"] {
+    gap: var(--density-field-gap) !important;
+  }
+
+  [data-slot="native-select"],
+  [data-slot="combobox-input"],
+  [data-slot="input-group"] {
+    height: var(--density-control-height) !important;
+  }
+
+  [data-slot="input-group"] [data-slot="input"],
+  [data-slot="input-group"] [data-slot="button"] {
+    height: 100% !important;
+  }
+}

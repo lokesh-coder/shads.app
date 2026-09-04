@@ -1,0 +1,75 @@
+/**
+ * Role-based semantic wiring — neutrals for structure, brand for primary only.
+ * Charts use curated hex values. Secondary/accent stay neutral gray.
+ */
+:root {
+  --background: #ffffff;
+  --card: #ffffff;
+  --popover: #ffffff;
+
+  --foreground: var(--neutral-900);
+  --card-foreground: var(--neutral-900);
+  --popover-foreground: var(--neutral-900);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--neutral-900);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--neutral-900);
+  --border: var(--neutral-200);
+  --input: var(--neutral-200);
+
+  --primary: var(--brand-600);
+  --primary-foreground: #ffffff;
+  --ring: var(--brand-400);
+  --chart-1: #6a5d80;
+  --chart-2: #0891b2;
+  --chart-3: #059669;
+  --chart-4: #d97706;
+  --chart-5: #e11d48;
+
+  --sidebar: var(--neutral-50);
+  --sidebar-foreground: var(--neutral-900);
+  --sidebar-primary: var(--brand-600);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--neutral-100);
+  --sidebar-accent-foreground: var(--neutral-900);
+  --sidebar-border: var(--neutral-200);
+  --sidebar-ring: var(--brand-400);
+}
+
+.dark {
+  --background: var(--neutral-950);
+  --card: var(--neutral-900);
+  --popover: var(--neutral-900);
+
+  --foreground: var(--neutral-50);
+  --card-foreground: var(--neutral-50);
+  --popover-foreground: var(--neutral-50);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --secondary: var(--neutral-800);
+  --secondary-foreground: var(--neutral-50);
+  --accent: var(--neutral-800);
+  --accent-foreground: var(--neutral-50);
+  --border: var(--neutral-800);
+  --input: var(--neutral-800);
+
+  --primary: var(--brand-400);
+  --primary-foreground: #09090b;
+  --ring: var(--brand-500);
+  --chart-1: #6a5d80;
+  --chart-2: #0891b2;
+  --chart-3: #059669;
+  --chart-4: #d97706;
+  --chart-5: #e11d48;
+
+  --sidebar: var(--neutral-900);
+  --sidebar-foreground: var(--neutral-50);
+  --sidebar-primary: var(--brand-400);
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: var(--neutral-800);
+  --sidebar-accent-foreground: var(--neutral-50);
+  --sidebar-border: var(--neutral-800);
+  --sidebar-ring: var(--brand-500);
+}

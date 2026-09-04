@@ -1,0 +1,92 @@
+/**
+ * OPTIONAL: Comfortable spacing for menu, command, and list items.
+ *
+ * Comment out `@import "./styles/menus.css"` in index.css to revert to
+ * shadcn defaults (px-1.5 py-1).
+ *
+ * ─── Knobs — edit for tighter or looser menus ───
+ */
+:root {
+  --menu-item-px: 0.625rem;
+  --menu-item-py: 0.375rem;
+  --menu-item-pr-check: 2rem;
+  --menu-item-inset-pl: 1.75rem;
+  --menu-list-padding: 0.375rem;
+  --menu-item-gap: 0.5rem;
+  --menu-content-min-width: 8rem;
+  --menu-select-min-width: 9rem;
+}
+
+@layer utilities {
+  [data-slot="dropdown-menu-item"],
+  [data-slot="dropdown-menu-sub-trigger"],
+  [data-slot="context-menu-item"],
+  [data-slot="context-menu-sub-trigger"],
+  [data-slot="menubar-item"],
+  [data-slot="menubar-sub-trigger"],
+  [data-slot="command-item"] {
+    padding-block: var(--menu-item-py) !important;
+    padding-inline: var(--menu-item-px) !important;
+    gap: var(--menu-item-gap) !important;
+    white-space: nowrap !important;
+  }
+
+  [data-slot="dropdown-menu-item"][data-inset],
+  [data-slot="dropdown-menu-sub-trigger"][data-inset],
+  [data-slot="context-menu-item"][data-inset],
+  [data-slot="context-menu-sub-trigger"][data-inset],
+  [data-slot="menubar-item"][data-inset],
+  [data-slot="menubar-sub-trigger"][data-inset] {
+    padding-left: var(--menu-item-inset-pl) !important;
+  }
+
+  [data-slot="dropdown-menu-checkbox-item"],
+  [data-slot="dropdown-menu-radio-item"],
+  [data-slot="context-menu-checkbox-item"],
+  [data-slot="context-menu-radio-item"],
+  [data-slot="menubar-checkbox-item"],
+  [data-slot="menubar-radio-item"],
+  [data-slot="combobox-item"],
+  [data-slot="select-item"] {
+    padding-block: var(--menu-item-py) !important;
+    padding-left: var(--menu-item-px) !important;
+    padding-right: var(--menu-item-pr-check) !important;
+    gap: var(--menu-item-gap) !important;
+    white-space: nowrap !important;
+  }
+
+  [data-slot="dropdown-menu-checkbox-item"][data-inset],
+  [data-slot="dropdown-menu-radio-item"][data-inset],
+  [data-slot="context-menu-checkbox-item"][data-inset],
+  [data-slot="context-menu-radio-item"][data-inset],
+  [data-slot="menubar-checkbox-item"][data-inset],
+  [data-slot="menubar-radio-item"][data-inset],
+  [data-slot="select-item"][data-inset] {
+    padding-left: var(--menu-item-inset-pl) !important;
+  }
+
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"],
+  [data-slot="context-menu-content"],
+  [data-slot="context-menu-sub-content"],
+  [data-slot="menubar-content"],
+  [data-slot="menubar-sub-content"],
+  [data-slot="command"],
+  [data-slot="command-group"],
+  [data-slot="combobox-list"],
+  [data-slot="select-group"] {
+    padding: var(--menu-list-padding) !important;
+  }
+
+  /* Grow to fit labels — at least as wide as trigger (anchor) */
+  [data-slot="dropdown-menu-content"] {
+    width: auto !important;
+    min-width: max(var(--anchor-width), var(--menu-content-min-width)) !important;
+  }
+
+  [data-slot="select-content"],
+  [data-slot="combobox-content"] {
+    width: auto !important;
+    min-width: max(var(--anchor-width), var(--menu-select-min-width)) !important;
+  }
+}

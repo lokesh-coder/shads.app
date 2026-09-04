@@ -1,0 +1,17 @@
+/**
+ * Brand ramp — generated from brandRoles.primary for utilities (bg-brand-*).
+ * Designers edit roles in the theme builder, not individual steps.
+ */
+:root {
+  --brand-50: #f4f2f7;
+  --brand-100: #ebe7f0;
+  --brand-200: #d8d0e0;
+  --brand-300: #c0b3cc;
+  --brand-400: #a896b7;
+  --brand-500: #9079a3;
+  --brand-600: #6a5d80;
+  --brand-700: #574c69;
+  --brand-800: #443c53;
+  --brand-900: #312c3d;
+  --brand-950: #1e1b27;
+}

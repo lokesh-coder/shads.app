@@ -1,0 +1,36 @@
+/**
+ * OPTIONAL: Themed modal overlays (dialog, sheet, drawer).
+ *
+ * Comment out `@import "./styles/overlays.css"` in index.css to revert to
+ * shadcn default `bg-black/10` overlays in components.
+ */
+:root {
+  --overlay-background: color-mix(in srgb, var(--foreground) 12%, transparent);
+  --overlay-blur: 4px;
+}
+
+.dark {
+  --overlay-background: color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+@layer utilities {
+  [data-slot="dialog-overlay"],
+  [data-slot="alert-dialog-overlay"],
+  [data-slot="sheet-overlay"],
+  [data-slot="drawer-overlay"] {
+    background-color: var(--overlay-background) !important;
+    -webkit-backdrop-filter: blur(var(--overlay-blur));
+    backdrop-filter: blur(var(--overlay-blur));
+  }
+
+  /* Nested settings confirms: stronger dim above parent dialog (z-50) */
+  [data-slot="settings-nested-alert-overlay"] {
+    background-color: color-mix(
+      in srgb,
+      var(--foreground) 38%,
+      transparent
+    ) !important;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}

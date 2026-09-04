@@ -1,0 +1,73 @@
+/**
+ * OPTIONAL: Calmer focus for form controls — darker border + soft elevation.
+ *
+ * Comment out `@import "./styles/focus.css"` in index.css to revert to
+ * shadcn ring-3 focus rings.
+ *
+ * ─── Knobs — edit border darkness and lift ───
+ */
+:root {
+  --focus-border: color-mix(in srgb, var(--foreground) 22%, var(--border));
+  --focus-shadow:
+    0 1px 1px color-mix(in srgb, var(--foreground) 3%, transparent),
+    0 2px 8px color-mix(in srgb, var(--foreground) 4%, transparent),
+    0 8px 20px color-mix(in srgb, var(--foreground) 3%, transparent);
+  --focus-error-border: color-mix(in srgb, var(--destructive) 70%, var(--border));
+  --focus-error-shadow:
+    0 1px 1px color-mix(in srgb, var(--destructive) 8%, transparent),
+    0 2px 8px color-mix(in srgb, var(--destructive) 10%, transparent);
+}
+
+.dark {
+  --focus-border: color-mix(in srgb, var(--foreground) 38%, var(--border));
+  --focus-shadow:
+    0 1px 2px rgb(0 0 0 / 0.18),
+    0 2px 8px rgb(0 0 0 / 0.14),
+    0 8px 20px rgb(0 0 0 / 0.1);
+  --focus-error-shadow:
+    0 1px 2px color-mix(in srgb, var(--destructive) 15%, transparent),
+    0 2px 8px color-mix(in srgb, var(--destructive) 12%, transparent);
+}
+
+@layer utilities {
+  [data-slot="input"]:focus-visible:not(:disabled),
+  [data-slot="textarea"]:focus-visible:not(:disabled),
+  [data-slot="select-trigger"]:focus-visible,
+  [data-slot="native-select"]:focus-visible,
+  [data-slot="combobox-chips"]:focus-within,
+  [data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible),
+  [data-slot="input-otp-slot"][data-active="true"] {
+    border-color: var(--focus-border) !important;
+    box-shadow: var(--focus-shadow) !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-width: 0px !important;
+  }
+
+  [data-slot="input"][aria-invalid="true"]:focus-visible:not(:disabled),
+  [data-slot="textarea"][aria-invalid="true"]:focus-visible:not(:disabled),
+  [data-slot="select-trigger"][aria-invalid="true"]:focus-visible,
+  [data-slot="native-select"][aria-invalid="true"]:focus-visible,
+  [data-slot="combobox-chips"][aria-invalid="true"]:focus-within,
+  [data-slot="input-group"][aria-invalid="true"]:has(
+      [data-slot="input-group-control"]:focus-visible
+    ),
+  [data-slot="input-otp"][aria-invalid="true"]
+    [data-slot="input-otp-slot"][data-active="true"] {
+    border-color: var(--focus-error-border) !important;
+    box-shadow: var(--focus-error-shadow) !important;
+  }
+
+  [data-slot="input"][aria-invalid="true"]:not(:focus-visible):not(:disabled),
+  [data-slot="textarea"][aria-invalid="true"]:not(:focus-visible):not(:disabled),
+  [data-slot="select-trigger"][aria-invalid="true"]:not(:focus-visible),
+  [data-slot="native-select"][aria-invalid="true"]:not(:focus-visible),
+  [data-slot="combobox-chips"][aria-invalid="true"]:not(:focus-within),
+  [data-slot="input-group"][aria-invalid="true"]:not(
+      :has([data-slot="input-group-control"]:focus-visible)
+    ) {
+    border-color: var(--destructive) !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-width: 0px !important;
+  }
+}

@@ -1,0 +1,17 @@
+/**
+ * OPTIONAL: Apply heading font to semantic heading elements.
+ * Type scale (root size, leading, icon stroke) lives in type-scale.css.
+ *
+ * Comment out `@import "./styles/typography.css"` in index.css to revert.
+ */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-heading {
+    @apply font-heading;
+  }
+}
