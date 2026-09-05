@@ -335,7 +335,12 @@ export function TemplateProductCard({
   return (
     <Card className="overflow-hidden py-0">
       <div className="relative">
-        <ComposedPhoto variant={variant} className={cn(aspectClass, "rounded-none")} />
+        <ComposedPhoto
+          variant={variant}
+          seed={name}
+          alt={name}
+          className={cn(aspectClass, "rounded-none")}
+        />
         {badge ? (
           <Badge className="absolute top-3 left-3" variant="secondary">
             {badge}

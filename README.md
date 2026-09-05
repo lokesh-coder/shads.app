@@ -1,21 +1,25 @@
-# React + TypeScript + Vite + shadcn/ui
+# shads.app
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+Visual theme builder for [shadcn/ui](https://ui.shadcn.com). Design, preview, and export production-ready themes with 17 style presets, a live component gallery, and full-page product templates.
 
-## Adding components
+**Live:** [shads.app](https://shads.app) · **Source:** [github.com/lokesh-coder/shads.app](https://github.com/lokesh-coder/shads.app)
 
-To add components to your app, run the following command:
+## Develop
 
 ```bash
-npx shadcn@latest add button
+npm install
+npm run dev
 ```
 
-This will place the ui components in the `src/components` directory.
+## Scripts
 
-## Using components
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Production build |
+| `npm test` | Run tests |
+| `npm run lint` | ESLint |
 
-To use the components in your app, import them as follows:
+## Stack
 
-```tsx
-import { Button } from "@/components/ui/button"
-```
+React · TypeScript · Vite · Tailwind CSS · shadcn/ui · Base UI

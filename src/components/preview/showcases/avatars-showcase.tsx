@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -42,10 +42,12 @@ export function AvatarsShowcase() {
         <ShowcaseContent>
           <div className="flex items-center -space-x-2">
             {team.map((member) => (
-              <Avatar key={member.initials} className="ring-2 ring-card">
-                <AvatarImage src="" alt={member.name} />
-                <AvatarFallback>{member.initials}</AvatarFallback>
-              </Avatar>
+              <PersonAvatar
+                key={member.initials}
+                name={member.name}
+                seed={member.name}
+                className="ring-2 ring-card"
+              />
             ))}
             <Button
               variant="outline"
@@ -61,10 +63,7 @@ export function AvatarsShowcase() {
               <ListRow
                 key={member.initials}
                 leading={
-                  <Avatar size="sm">
-                    <AvatarImage src="" alt={member.name} />
-                    <AvatarFallback>{member.initials}</AvatarFallback>
-                  </Avatar>
+                  <PersonAvatar name={member.name} seed={member.name} size="sm" />
                 }
                 title={member.name}
                 description={member.role}

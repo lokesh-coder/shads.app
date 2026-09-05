@@ -1,6 +1,6 @@
-import { BotIcon, FileTextIcon, SendIcon, UserIcon } from "lucide-react"
+import { FileTextIcon, SendIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -88,15 +88,11 @@ export function CanvasTemplate() {
                   message.role === "user" && "flex-row-reverse",
                 )}
               >
-                <Avatar className="size-8 shrink-0">
-                  <AvatarFallback className="text-xs">
-                    {message.role === "user" ? (
-                      <UserIcon className="size-3.5" />
-                    ) : (
-                      <BotIcon className="size-3.5" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
+                <PersonAvatar
+                  name={message.role === "user" ? "You" : "Assistant"}
+                  seed={message.role === "user" ? "user" : "assistant"}
+                  className="size-8 shrink-0"
+                />
                 <div
                   className={cn(
                     "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed",

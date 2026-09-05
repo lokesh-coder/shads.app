@@ -1,6 +1,6 @@
 import { HeartIcon, ReplyIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -26,9 +26,7 @@ export function CommentShowcase() {
       <CardContent>
         <ShowcaseContent>
           <div className="flex gap-2.5">
-            <Avatar size="sm">
-              <AvatarFallback className="text-xs">MC</AvatarFallback>
-            </Avatar>
+            <PersonAvatar name="Maya Chen" seed="Maya Chen" size="sm" />
             <div className="min-w-0 flex-1">
               <InsetPanel className="bg-muted/50">
                 <p className="text-xs font-medium">Maya Chen · 10:42 AM</p>
@@ -50,9 +48,7 @@ export function CommentShowcase() {
           </div>
           <Separator />
           <div className="flex gap-2">
-            <Avatar size="sm">
-              <AvatarFallback className="text-xs">AK</AvatarFallback>
-            </Avatar>
+            <PersonAvatar name="You" seed="user" size="sm" />
             <Textarea
               placeholder="Write a reply..."
               className="min-h-10 flex-1 resize-none text-sm"

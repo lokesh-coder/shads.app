@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -111,9 +111,7 @@ export function TemplateTestimonials({
                 <p className="text-sm leading-relaxed">&ldquo;{item.quote}&rdquo;</p>
               </CardHeader>
               <CardContent className="flex items-center gap-3 pt-0">
-                <Avatar>
-                  <AvatarFallback className="text-xs">{item.initials}</AvatarFallback>
-                </Avatar>
+                <PersonAvatar name={item.name} seed={item.name} />
                 <div>
                   <p className="text-sm font-medium">{item.name}</p>
                   <p className="text-xs text-muted-foreground">

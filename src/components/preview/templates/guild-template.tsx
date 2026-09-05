@@ -5,7 +5,7 @@ import {
   UserPlusIcon,
 } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -139,14 +139,11 @@ export function GuildTemplate() {
             {people.map((person) => (
               <Card key={person.name} size="sm" className="transition-colors hover:bg-muted/20">
                 <CardHeader className="flex flex-row items-center gap-4">
-                  <Avatar className="size-11">
-                    <AvatarFallback>
-                      {person.name
-                        .split(" ")
-                        .map((p) => p[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
+                  <PersonAvatar
+                    name={person.name}
+                    seed={person.name}
+                    className="size-11"
+                  />
                   <div className="min-w-0 flex-1">
                     <CardTitle className="truncate text-base">{person.name}</CardTitle>
                     <CardDescription className="truncate">{person.role}</CardDescription>
@@ -234,14 +231,11 @@ export function GuildTemplate() {
                 key={`${item.who}-${item.detail}`}
                 className="flex items-center gap-3 rounded-lg border border-border/50 p-3"
               >
-                <Avatar className="size-9">
-                  <AvatarFallback className="text-xs">
-                    {item.who
-                      .split(" ")
-                      .map((p) => p[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
+                <PersonAvatar
+                  name={item.who}
+                  seed={item.who}
+                  className="size-9"
+                />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium">{item.who}</p>
                   <p className="text-xs text-muted-foreground">{item.detail}</p>

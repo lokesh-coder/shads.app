@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { createDefaultConfig } from "@/lib/theme-config"
+import { createDefaultConfig, createDefaultShadcnConfig } from "@/lib/theme-config"
+import { getChangedExportSections } from "@/lib/export-plan"
 import {
   generateAll,
   generateBrandCss,
@@ -11,6 +12,7 @@ import {
   generateNeutralCss,
   generateOverlaysCss,
   generateSurfacesCss,
+  generateThemeBundleFromSections,
 } from "@/lib/theme-codegen"
 
 describe("theme-codegen", () => {
@@ -112,20 +114,84 @@ describe("theme-codegen", () => {
     expect(css).not.toContain("brand-secondary.css")
   })
 
-  it("theme bundle includes enabled layers only", () => {
-    const all = generateAll({
-      ...config,
-      layers: { ...config.layers, surfaces: false },
+  it("theme bundle includes only changed sections", () => {
+    const baseline = createDefaultShadcnConfig()
+    const sections = getChangedExportSections({
+      ...baseline,
+      layers: { ...baseline.layers, surfaces: true },
     })
-    expect(all.theme).toContain("Semantic tokens")
-    expect(all.theme).not.toContain("─── Surfaces ───")
-    expect(all.index).toContain('@import "./styles/theme.css";')
+    expect(sections).not.toContain("surfaces")
+
+    const bundle = generateThemeBundleFromSections(baseline, ["typography"])
+    expect(bundle).toContain("OPTIONAL: Typography")
+    expect(bundle).not.toContain("Neutral ramp")
+    expect(bundle).not.toContain("--background: oklch")
   })
 
-  it("theme bundle includes optional layers when enabled", () => {
+  it("theme bundle includes semantic path when brand semantic is enabled", () => {
+    const config = createDefaultConfig()
+    const sections = getChangedExportSections(config)
+    expect(sections).toContain("semantic")
+
     const all = generateAll(config)
-    expect(all.theme).toContain("─── Surfaces ───")
-    expect(all.theme).toContain("─── Neutral ramp ───")
-    expect(all.theme).toContain("─── Brand ramp ───")
+    expect(all.isEmpty).toBe(false)
+    expect(all.theme).toContain("Role-based semantic wiring")
+    expect(all.theme).toContain("UI neutral ramp")
+    expect(all.index).toBeNull()
+  })
+
+  it("default shadcn has nothing to export", () => {
+    const all = generateAll(createDefaultShadcnConfig())
+    expect(all.isEmpty).toBe(true)
+    expect(all.sections).toEqual([])
+    expect(all.index).toBeNull()
+    expect(all.theme).toBeNull()
+    expect(all.quickStart).toContain("no custom files")
+  })
+
+  it("typography-only change exports minimal delta", () => {
+    const config = {
+      ...createDefaultShadcnConfig(),
+      typeScale: {
+        ...createDefaultShadcnConfig().typeScale,
+        rootSize: "14px",
+      },
+    }
+    const all = generateAll(config)
+    expect(all.isEmpty).toBe(false)
+    expect(all.sections).toEqual(["typography"])
+    expect(all.theme).toContain("OPTIONAL: Typography")
+    expect(all.theme).not.toContain("UI neutral ramp")
+    expect(all.theme).not.toContain("--background: oklch")
+    expect(all.index).toBeNull()
+  })
+
+  it("font change exports index snippet only", () => {
+    const config = {
+      ...createDefaultShadcnConfig(),
+      fonts: {
+        ...createDefaultShadcnConfig().fonts,
+        sans: "geist",
+      },
+    }
+    const all = generateAll(config)
+    expect(all.sections).toEqual(["fonts"])
+    expect(all.index).toContain("Add to src/index.css")
+    expect(all.index).toContain('@import "@fontsource-variable/geist"')
+    expect(all.index).toContain("--font-family-sans: 'Geist Variable'")
+    expect(all.index).not.toContain("tailwindcss")
+    expect(all.index).not.toContain("--color-background")
+    expect(all.theme).toBeNull()
+  })
+
+  it("font change includes font imports only", () => {
+    const config = {
+      ...createDefaultShadcnConfig(),
+      fonts: { sans: "geist", heading: "geist", mono: "jetbrains-mono" },
+    }
+    const all = generateAll(config)
+    expect(all.sections).toContain("fonts")
+    expect(all.index).toContain('@import "@fontsource-variable/geist"')
+    expect(all.theme).toBeNull()
   })
 })

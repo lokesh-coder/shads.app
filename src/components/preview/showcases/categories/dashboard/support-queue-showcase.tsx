@@ -1,6 +1,6 @@
 import { ClockIcon, MessageSquareIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,21 +24,21 @@ const tickets = [
     subject: "Billing discrepancy on invoice",
     priority: "high" as const,
     wait: "2h",
-    initials: "MR",
+    name: "Maria Reyes",
   },
   {
     id: "TKT-1041",
     subject: "Cannot export CSV report",
     priority: "medium" as const,
     wait: "5h",
-    initials: "SL",
+    name: "Sam Liu",
   },
   {
     id: "TKT-1039",
     subject: "SSO login redirect loop",
     priority: "high" as const,
     wait: "8h",
-    initials: "JK",
+    name: "James Kim",
   },
 ]
 
@@ -57,9 +57,7 @@ export function SupportQueueShowcase() {
             <ListRow
               key={ticket.id}
               leading={
-                <Avatar className="size-8">
-                  <AvatarFallback className="text-xs">{ticket.initials}</AvatarFallback>
-                </Avatar>
+                <PersonAvatar name={ticket.name} seed={ticket.name} className="size-8" />
               }
               title={ticket.subject}
               description={`${ticket.id} · Waiting ${ticket.wait}`}

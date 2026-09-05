@@ -1,6 +1,6 @@
 import { CheckIcon, PlusIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -35,9 +35,7 @@ export function WorkspaceSwitcherShowcase() {
             <ListRow
               key={ws.name}
               leading={
-                <Avatar className="size-8">
-                  <AvatarFallback className="text-xs">{ws.initials}</AvatarFallback>
-                </Avatar>
+                <PersonAvatar name={ws.name} seed={ws.name} className="size-8" />
               }
               title={ws.name}
               description={`${ws.plan} plan`}

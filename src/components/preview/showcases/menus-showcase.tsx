@@ -7,7 +7,7 @@ import {
   UserIcon,
 } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -69,10 +69,7 @@ export function MenusShowcase() {
                     variant="ghost"
                     className="h-auto w-full justify-start gap-3 px-2 py-2"
                   >
-                    <Avatar size="sm">
-                      <AvatarImage src="" alt="Alex" />
-                      <AvatarFallback>AK</AvatarFallback>
-                    </Avatar>
+                    <PersonAvatar name="Alex Kim" seed="Alex Kim" size="sm" />
                     <div className="flex flex-col items-start text-left">
                       <span className="text-sm font-medium">Alex Kim</span>
                       <span className="text-xs text-muted-foreground">

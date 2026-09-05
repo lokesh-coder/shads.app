@@ -1,6 +1,6 @@
 import { CheckIcon, UserPlusIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -38,9 +38,7 @@ export function AssigneePickerShowcase() {
               <ListRow
                 key={person.name}
                 leading={
-                  <Avatar size="sm">
-                    <AvatarFallback className="text-xs">{person.initials}</AvatarFallback>
-                  </Avatar>
+                  <PersonAvatar name={person.name} seed={person.name} size="sm" />
                 }
                 title={person.name}
                 trailing={

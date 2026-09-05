@@ -480,6 +480,85 @@ export function matchGlobalPresetId(config: ThemeConfig): GlobalPresetId | null 
   )
 }
 
+const DEFAULT_SHADCN_PERSONALITY: PersonalityValues = {
+  cardMode: "bordered",
+  buttonPersonality: "utility",
+}
+
+const DEFAULT_SHADCN_LAYERS: ThemeConfig["layers"] = {
+  brandSemantic: false,
+  surfaces: false,
+  overlays: false,
+  menus: false,
+  focus: false,
+  density: false,
+  typography: false,
+  brandPresets: false,
+}
+
+/** Vanilla shadcn — OKLCH theme.css tokens, no premium chrome layers. */
+export function createDefaultShadcnConfig(): ThemeConfig {
+  const base = createDefaultConfig()
+  return {
+    ...base,
+    layers: { ...DEFAULT_SHADCN_LAYERS },
+    personality: { ...DEFAULT_SHADCN_PERSONALITY },
+    radius: "0.625rem",
+    preview: { ...defaultPreviewSettings },
+  }
+}
+
+export function applyDefaultShadcn(_config: ThemeConfig): ThemeConfig {
+  return createDefaultShadcnConfig()
+}
+
+function previewSettingsMatch(
+  a: PreviewSettings,
+  b: PreviewSettings,
+): boolean {
+  return (
+    a.mode === b.mode &&
+    a.columnsClass === b.columnsClass &&
+    a.gap === b.gap &&
+    a.canvas === b.canvas &&
+    a.showTileLabels === b.showTileLabels &&
+    JSON.stringify(a.featuredCategories ?? null) ===
+      JSON.stringify(b.featuredCategories ?? null)
+  )
+}
+
+export function isDefaultShadcnConfig(config: ThemeConfig): boolean {
+  if (matchGlobalPresetId(config)) return false
+
+  const ref = createDefaultShadcnConfig()
+  return (
+    (Object.keys(ref.layers) as (keyof ThemeConfig["layers"])[]).every(
+      (key) => config.layers[key] === ref.layers[key],
+    ) &&
+    config.radius === ref.radius &&
+    config.fonts.sans === ref.fonts.sans &&
+    config.fonts.heading === ref.fonts.heading &&
+    config.fonts.mono === ref.fonts.mono &&
+    config.personality.cardMode === ref.personality.cardMode &&
+    config.personality.buttonPersonality === ref.personality.buttonPersonality &&
+    previewSettingsMatch(config.preview, ref.preview) &&
+    config.surfaces.style === ref.surfaces.style &&
+    config.overlays.style === ref.overlays.style &&
+    config.focus.style === ref.focus.style
+  )
+}
+
+export type ThemePickerSelection = "default" | "custom" | GlobalPresetId
+
+export function resolveThemePickerSelection(
+  config: ThemeConfig,
+): ThemePickerSelection {
+  const presetId = matchGlobalPresetId(config)
+  if (presetId) return presetId
+  if (isDefaultShadcnConfig(config)) return "default"
+  return "custom"
+}
+
 export function setBrandPrimary(
   config: ThemeConfig,
   primary: BrandRoles["primary"],

@@ -1,6 +1,6 @@
 import { MoreHorizontalIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -40,10 +40,7 @@ export function TeamMemberShowcase() {
         <ShowcaseContent className="gap-0">
           <ListRow
             leading={
-              <Avatar>
-                <AvatarImage src="" alt="Maya" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
+              <PersonAvatar name="Maya Chen" seed="Maya Chen" />
             }
             title="Maya Chen"
             description="maya@studio.io"
@@ -74,9 +71,7 @@ export function TeamMemberShowcase() {
           <Separator className="my-1" />
           <ListRow
             leading={
-              <Avatar size="sm">
-                <AvatarFallback>JR</AvatarFallback>
-              </Avatar>
+              <PersonAvatar name="Jordan Rivera" seed="Jordan Rivera" size="sm" />
             }
             title="Jordan Rivera"
             description="Joined 2 days ago"

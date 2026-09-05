@@ -44,7 +44,7 @@ export function AppSettingsDialog({
         >
           <SettingsIcon />
         </TooltipTrigger>
-        <TooltipContent side="left">Settings</TooltipContent>
+        <TooltipContent side="right">Settings</TooltipContent>
       </Tooltip>
       <DialogContent className="max-w-sm gap-0 p-0 sm:max-w-sm">
         <DialogHeader className="border-b border-border px-5 py-4 text-left">

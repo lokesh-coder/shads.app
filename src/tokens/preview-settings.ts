@@ -190,12 +190,12 @@ export function previewMasonryTileSpacing(gap: PreviewSettings["gap"]): string {
 export function previewCanvasClass(canvas: PreviewSettings["canvas"]): string {
   switch (canvas) {
     case "paper":
-      return "bg-[#f5f3ef] dark:bg-muted/20"
+      return "bg-muted/20"
     case "flat":
       return "bg-background"
     case "muted":
     default:
-      return "bg-zinc-100/90 dark:bg-muted/30"
+      return "bg-muted/30"
   }
 }
 

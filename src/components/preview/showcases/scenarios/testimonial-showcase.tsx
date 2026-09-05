@@ -1,6 +1,6 @@
 import { QuoteIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   InsetPanel,
@@ -19,9 +19,7 @@ export function TestimonialShowcase() {
             trivial to keep components consistent across 40+ screens."
           </blockquote>
           <InsetPanel className="flex items-center gap-2.5 border-primary/15 bg-primary/[0.04]">
-            <Avatar size="sm">
-              <AvatarFallback className="text-xs">SR</AvatarFallback>
-            </Avatar>
+            <PersonAvatar name="Sarah Rivera" seed="Sarah Rivera" size="sm" />
             <div>
               <p className="text-sm font-medium">Sarah Rivera</p>
               <p className="text-xs text-muted-foreground">

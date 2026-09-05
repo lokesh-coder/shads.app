@@ -1,6 +1,6 @@
 import { GlobeIcon, LinkIcon, MailIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -13,9 +13,11 @@ export function AuthorBioShowcase() {
     <Card className={showcaseCard.editorial}>
       <CardContent className="pt-(--card-spacing)">
         <ShowcaseContent className="items-center gap-5 text-center">
-          <Avatar className="size-16">
-            <AvatarFallback className="text-lg font-medium">EM</AvatarFallback>
-          </Avatar>
+          <PersonAvatar
+            name="Elena Martinez"
+            seed="Elena Martinez"
+            className="size-16"
+          />
           <div className="flex flex-col gap-1">
             <p className="font-heading text-lg font-semibold">Elena Martinez</p>
             <p className="text-sm text-muted-foreground">Senior Editor · Platform</p>

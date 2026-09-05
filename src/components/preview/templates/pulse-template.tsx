@@ -6,7 +6,7 @@ import {
   PillIcon,
 } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -104,11 +104,11 @@ export function PulseTemplate() {
           <Card className="border-primary/20 bg-primary/[0.03]">
             <CardHeader>
               <div className="flex items-start gap-4">
-                <Avatar className="size-12">
-                  <AvatarFallback className="bg-primary/10 text-sm font-medium">
-                    SA
-                  </AvatarFallback>
-                </Avatar>
+                <PersonAvatar
+                  name="Dr. Sofia Alvarez"
+                  seed="Dr. Sofia Alvarez"
+                  className="size-12"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -162,9 +162,11 @@ export function PulseTemplate() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <div className="flex items-center gap-3 rounded-lg bg-muted/40 p-3">
-              <Avatar className="size-9">
-                <AvatarFallback className="text-xs">SA</AvatarFallback>
-              </Avatar>
+              <PersonAvatar
+                name="Dr. Sofia Alvarez"
+                seed="Dr. Sofia Alvarez"
+                className="size-9"
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium">Dr. Sofia Alvarez</p>
                 <p className="truncate text-sm text-muted-foreground">
@@ -174,9 +176,11 @@ export function PulseTemplate() {
               <Badge>New</Badge>
             </div>
             <div className="flex items-center gap-3 rounded-lg p-3">
-              <Avatar className="size-9">
-                <AvatarFallback className="text-xs">NC</AvatarFallback>
-              </Avatar>
+              <PersonAvatar
+                name="Nurse Care Team"
+                seed="Nurse Care Team"
+                className="size-9"
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium">Nurse Care Team</p>
                 <p className="truncate text-sm text-muted-foreground">

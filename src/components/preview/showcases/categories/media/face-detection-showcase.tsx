@@ -1,6 +1,6 @@
-import { ScanFaceIcon, UserIcon } from "lucide-react"
+import { ScanFaceIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -43,11 +43,7 @@ export function FaceDetectionShowcase() {
               <ListRow
                 key={face.name}
                 leading={
-                  <Avatar className="size-8">
-                    <AvatarFallback>
-                      <UserIcon className="size-3" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <PersonAvatar name={face.name} seed={face.name} className="size-8" />
                 }
                 title={face.name}
                 description={face.role}

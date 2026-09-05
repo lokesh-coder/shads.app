@@ -9,7 +9,7 @@ import {
 } from "lucide-react"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -124,9 +124,7 @@ export function WorkspaceTemplate() {
             <Button variant="ghost" size="icon" aria-label="Notifications">
               <BellIcon />
             </Button>
-            <Avatar className="size-8">
-              <AvatarFallback className="text-xs">AL</AvatarFallback>
-            </Avatar>
+            <PersonAvatar name="Alex Kim" seed="Alex Kim" className="size-8" />
             <Button size="sm">
               <PlusIcon data-icon="inline-start" />
               New
@@ -268,12 +266,12 @@ export function WorkspaceTemplate() {
             <CardContent>
               <div className="flex -space-x-2">
                 {team.map((member) => (
-                  <Avatar
+                  <PersonAvatar
                     key={member.name}
+                    name={member.name}
+                    seed={member.name}
                     className="size-10 border-2 border-background"
-                  >
-                    <AvatarFallback className="text-xs">{member.initials}</AvatarFallback>
-                  </Avatar>
+                  />
                 ))}
               </div>
               <div className="mt-4 flex flex-wrap gap-2">

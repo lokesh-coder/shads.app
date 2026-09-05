@@ -135,16 +135,15 @@ function MappingFields({
   )
 }
 
-export function SemanticMappingControls({
+export function SemanticMappingPanel({
   config,
   onChange,
-  embedded,
-}: ControlPanelProps) {
+}: Pick<ControlPanelProps, "config" | "onChange">) {
   return (
-    <ControlSection title="Semantic mapping" defaultOpen={false} embedded={embedded}>
+    <>
       <p className="mb-3 text-xs text-muted-foreground">
-        Chart colors are edited in Brand → Chart palette. Secondary/accent
-        always map to neutral steps.
+        Maps each shadcn token to a step on your neutral or brand ramp. Chart
+        colors are edited in Colors → Chart colors.
       </p>
       <Tabs defaultValue="light">
         <TabsList className="w-full">
@@ -180,6 +179,19 @@ export function SemanticMappingControls({
           />
         </TabsContent>
       </Tabs>
+    </>
+  )
+}
+
+/** @deprecated Use AdvancedControls — kept for direct import if needed */
+export function SemanticMappingControls({
+  config,
+  onChange,
+  embedded,
+}: ControlPanelProps) {
+  return (
+    <ControlSection title="Semantic mapping" defaultOpen={false} embedded={embedded}>
+      <SemanticMappingPanel config={config} onChange={onChange} />
     </ControlSection>
   )
 }

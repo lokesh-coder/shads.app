@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef } from "react"
 
 import {
   PreviewSettingsProvider,
@@ -9,13 +9,20 @@ import {
   getPreviewCategory,
 } from "@/components/preview/preview-labels"
 import type { PreviewEntry } from "@/components/preview/preview-registry"
-import { resolvePreviewEntries } from "@/lib/preview-entries"
-import { paginatePreviewEntries } from "@/lib/preview-gallery-pages"
+import { PreviewPrimitivesGrid } from "@/components/preview/PreviewPrimitivesGrid"
 import { TemplatePreviewPage } from "@/components/preview/templates/TemplatePreviewPage"
 import {
   APP_TEMPLATE_PAGE_INDEX,
   GALLERY_PAGE_COUNT,
+  GALLERY_PAGE_LABELS,
 } from "@/components/preview/templates/template-registry"
+import { resolvePreviewEntries } from "@/lib/preview-entries"
+import { paginatePreviewEntries } from "@/lib/preview-gallery-pages"
+import {
+  galleryTabToIndex,
+  indexToGalleryTab,
+  type GalleryTab,
+} from "@/lib/share-url"
 import type { ThemeConfig } from "@/lib/theme-config"
 import { matchGlobalPresetId } from "@/lib/theme-config"
 import { cn } from "@/lib/utils"
@@ -81,7 +88,11 @@ function PreviewMasonryPage({
       )}
     >
       {entries.map((entry) => (
-        <div key={entry.id} className={cn("break-inside-avoid", tileSpacingClass)}>
+        <div
+          key={entry.id}
+          data-share-item={entry.id}
+          className={cn("break-inside-avoid", tileSpacingClass)}
+        >
           <ShowcaseTile entry={entry} />
         </div>
       ))}
@@ -91,22 +102,56 @@ function PreviewMasonryPage({
 
 type PreviewGalleryProps = {
   config: ThemeConfig
+  tab: GalleryTab
+  shareItem?: string
+  onTabChange: (tab: GalleryTab) => void
+  onShareItemChange: (item: string | undefined) => void
 }
 
-export function PreviewGallery({ config }: PreviewGalleryProps) {
-  const [page, setPage] = useState(0)
+export function PreviewGallery({
+  config,
+  tab,
+  shareItem,
+  onTabChange,
+  onShareItemChange,
+}: PreviewGalleryProps) {
+  const page = galleryTabToIndex(tab)
   const preview = config.preview
   const presetId = matchGlobalPresetId(config)
-
-  useEffect(() => {
-    setPage(0)
-  }, [presetId, preview.mode, preview.columnsClass, preview.canvas])
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const resetKey = `${presetId}:${preview.mode}:${preview.columnsClass}:${preview.canvas}`
+  const prevResetKeyRef = useRef(resetKey)
 
   const entries = useMemo(() => resolvePreviewEntries(config), [config])
 
-  const componentPages = useMemo(() => paginatePreviewEntries(entries), [entries])
+  const componentEntries = useMemo(
+    () => paginatePreviewEntries(entries)[1] ?? [],
+    [entries],
+  )
+
+  useEffect(() => {
+    if (prevResetKeyRef.current === resetKey) return
+    prevResetKeyRef.current = resetKey
+    onTabChange("primitives")
+    onShareItemChange(undefined)
+  }, [resetKey, onTabChange, onShareItemChange])
+
+  useEffect(() => {
+    if (!shareItem) return
+
+    const frame = window.requestAnimationFrame(() => {
+      const root = scrollContainerRef.current
+      const target = root?.querySelector<HTMLElement>(
+        `[data-share-item="${shareItem}"]`,
+      )
+      target?.scrollIntoView({ behavior: "smooth", block: "center" })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [shareItem, tab, componentEntries])
 
   const isTemplatePage = page === APP_TEMPLATE_PAGE_INDEX
+  const isPrimitivesPage = page === 0
 
   return (
     <PreviewSettingsProvider settings={preview}>
@@ -116,18 +161,22 @@ export function PreviewGallery({ config }: PreviewGalleryProps) {
           isTemplatePage ? "bg-background" : previewCanvasClass(preview.canvas),
         )}
       >
-        <div className="h-full overflow-auto pb-16">
+        <div ref={scrollContainerRef} className="h-full overflow-auto pb-16">
           {isTemplatePage ? (
             <TemplatePreviewPage config={config} />
           ) : (
             <div className={previewPagePadding()}>
-              <PreviewMasonryPage
-                entries={componentPages[page] ?? componentPages[0]!}
-                columnsClass={preview.columnsClass}
-                gapClass={previewMasonryGapClass(preview.gap)}
-                tileSpacingClass={previewMasonryTileSpacing(preview.gap)}
-                mode={preview.mode}
-              />
+              {isPrimitivesPage ? (
+                <PreviewPrimitivesGrid />
+              ) : (
+                <PreviewMasonryPage
+                  entries={componentEntries}
+                  columnsClass={preview.columnsClass}
+                  gapClass={previewMasonryGapClass(preview.gap)}
+                  tileSpacingClass={previewMasonryTileSpacing(preview.gap)}
+                  mode={preview.mode}
+                />
+              )}
             </div>
           )}
         </div>
@@ -138,19 +187,19 @@ export function PreviewGallery({ config }: PreviewGalleryProps) {
               <button
                 key={index}
                 type="button"
-                className={`h-7 min-w-9 rounded-md px-2 font-mono text-xs tabular-nums transition-colors ${
+                className={cn(
+                  "h-7 rounded-md px-2.5 font-mono text-xs transition-colors",
                   page === index
                     ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-                onClick={() => setPage(index)}
-                title={
-                  index === APP_TEMPLATE_PAGE_INDEX
-                    ? "Full app template"
-                    : `Components page ${index + 1}`
-                }
+                    : "text-muted-foreground hover:bg-muted",
+                )}
+                onClick={() => {
+                  onTabChange(indexToGalleryTab(index))
+                  onShareItemChange(undefined)
+                }}
+                title={GALLERY_PAGE_LABELS[index]}
               >
-                {String(index + 1).padStart(2, "0")}
+                {GALLERY_PAGE_LABELS[index]}
               </button>
             ))}
           </div>

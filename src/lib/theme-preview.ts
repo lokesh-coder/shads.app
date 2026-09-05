@@ -7,8 +7,10 @@ import {
   generateOverlaysCss,
   generatePersonalityCss,
   generateSurfacesCss,
+  generateThemeCss,
   generateTypographyCss,
 } from "@/lib/theme-codegen"
+import { PREVIEW_CSS_SCOPE, scopeGeneratedCss } from "@/lib/css-scope"
 import type { ThemeConfig } from "@/lib/theme-config"
 import { getFontById } from "@/tokens/fonts"
 
@@ -71,7 +73,10 @@ function buildPreviewCss(config: ThemeConfig): string {
 
   if (config.layers.brandSemantic) {
     parts.push(generateBrandSemanticCss(config))
+  } else {
+    parts.push(generateThemeCss(config))
   }
+
   if (config.layers.surfaces) {
     parts.push(generateSurfacesCss(config))
     parts.push(generatePersonalityCss(config))
@@ -92,16 +97,17 @@ function buildPreviewCss(config: ThemeConfig): string {
     parts.push(generateTypographyCss(config))
   }
 
-  return parts.join("\n")
+  return scopeGeneratedCss(parts.join("\n"), PREVIEW_CSS_SCOPE)
 }
 
 export function applyThemePreview(
+  root: HTMLElement,
   config: ThemeConfig,
   isDark: boolean,
 ): void {
-  const root = document.documentElement
   setThemeVars(root, config)
   setFontVars(root, config)
+  document.documentElement.classList.toggle("dark", isDark)
   root.classList.toggle("dark", isDark)
   root.dataset.cardMode = config.personality.cardMode
   root.dataset.buttonPersonality = config.personality.buttonPersonality
@@ -110,8 +116,7 @@ export function applyThemePreview(
   style.textContent = buildPreviewCss(config)
 }
 
-export function clearThemePreview(): void {
-  const root = document.documentElement
+export function clearThemePreview(root: HTMLElement): void {
   for (const step of [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]) {
     root.style.removeProperty(`--neutral-${step}`)
     root.style.removeProperty(`--brand-${step}`)
@@ -124,6 +129,7 @@ export function clearThemePreview(): void {
   root.style.removeProperty("--font-sans")
   root.style.removeProperty("--font-heading")
   root.style.removeProperty("--font-mono")
+  document.documentElement.classList.remove("dark")
   root.classList.remove("dark")
   delete root.dataset.cardMode
   delete root.dataset.buttonPersonality

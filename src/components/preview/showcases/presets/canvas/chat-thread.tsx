@@ -1,6 +1,4 @@
-import { BotIcon, UserIcon } from "lucide-react"
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 
 const messages = [
   {
@@ -21,15 +19,11 @@ export function ChatThreadShowcase() {
           key={message.text}
           className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
         >
-          <Avatar className="size-8 shrink-0">
-            <AvatarFallback className="text-xs">
-              {message.role === "user" ? (
-                <UserIcon className="size-3.5" />
-              ) : (
-                <BotIcon className="size-3.5" />
-              )}
-            </AvatarFallback>
-          </Avatar>
+          <PersonAvatar
+            name={message.role === "user" ? "You" : "Assistant"}
+            seed={message.role === "user" ? "user" : "assistant"}
+            className="size-8 shrink-0"
+          />
           <div
             className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
               message.role === "user"

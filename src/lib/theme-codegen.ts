@@ -5,6 +5,11 @@ import type {
   SemanticMapping,
   ThemeConfig,
 } from "@/lib/theme-config"
+import {
+  type ExportSection,
+  getChangedExportSections,
+  getExportBaseline,
+} from "@/lib/export-plan"
 import { getFontById } from "@/tokens/fonts"
 import { overlayDataSlots } from "@/tokens/overlays"
 import { surfaceRingSlots } from "@/tokens/surfaces"
@@ -1054,34 +1059,7 @@ export function generateThemeCss(config: ThemeConfig): string {
 ${body}`
 }
 
-export function generateIndexCss(config: ThemeConfig): string {
-  const imports = [
-    '@import "tailwindcss";',
-    '@import "tw-animate-css";',
-    '@import "shadcn/tailwind.css";',
-    '@import "./styles/theme.css";',
-    ...fontImports(config),
-  ]
-
-  const sans = fontFamily(config, "sans")
-  const heading = fontFamily(config, "heading")
-  const mono = fontFamily(config, "mono")
-
-  return `${imports.join("\n")}
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --font-family-sans: ${sans};
-  --font-family-heading: ${heading};
-  --font-family-mono: ${mono};
-}
-
-@theme inline {
-    --font-sans: var(--font-family-sans);
-    --font-heading: var(--font-family-heading);
-    --font-mono: var(--font-family-mono);
-    --color-sidebar-ring: var(--sidebar-ring);
+const THEME_INLINE_SEMANTIC_COLORS = `    --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-accent: var(--sidebar-accent);
@@ -1111,7 +1089,139 @@ export function generateIndexCss(config: ThemeConfig): string {
     --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
     --color-foreground: var(--foreground);
-    --color-background: var(--background);
+    --color-background: var(--background);`
+
+const THEME_INLINE_RADIUS_SCALE = `    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);`
+
+/** Stock shadcn entry — no font imports, neutral/brand ramps, or base overrides. */
+export function generateMinimalIndexCss(): string {
+  return `@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./styles/theme.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+${THEME_INLINE_SEMANTIC_COLORS}
+${THEME_INLINE_RADIUS_SCALE}
+}
+`
+}
+
+export function generateEmptyQuickStartMd(): string {
+  return `# Theme Quick Start
+
+Your theme matches the stock shadcn baseline — no custom files to export.
+
+Use the default \`index.css\` and \`theme.css\` from a fresh shadcn project, or keep your existing setup as-is.
+`
+}
+
+function generateQuickStartFromSections(
+  config: ThemeConfig,
+  sections: ExportSection[],
+): string {
+  const fontPackages = new Set<string>()
+  if (sections.includes("fonts")) {
+    const baseline = getExportBaseline()
+    for (const role of getChangedFontRoles(config, baseline)) {
+      const font = getFontById(config.fonts[role])
+      if (font) fontPackages.add(font.packageName)
+    }
+  }
+
+  const fontInstall =
+    fontPackages.size > 0
+      ? `\nnpm i ${[...fontPackages].join(" ")}\n`
+      : ""
+
+  const sectionList = sections
+    .map((section) => {
+      switch (section) {
+        case "fonts":
+          return "Fonts"
+        case "radius":
+          return "Radius"
+        case "neutral":
+          return "Neutral ramp"
+        case "brand":
+          return "Brand ramp"
+        case "semantic":
+          return "Semantic tokens"
+        case "surfaces":
+          return "Surfaces"
+        case "personality":
+          return "Personality"
+        case "typography":
+          return "Typography"
+        case "density":
+          return "Density"
+        case "focus":
+          return "Focus"
+        case "overlays":
+          return "Overlays"
+        case "menus":
+          return "Menus"
+        case "brandPresets":
+          return "Brand presets"
+      }
+    })
+    .join(" · ")
+
+  return `# Theme Quick Start
+
+## Customizations in this export
+
+${sectionList}
+
+## 1. Install font packages (if needed)
+${fontInstall}
+## 2. Merge snippets
+
+Paste each generated snippet into your existing shadcn project:
+
+${sections.includes("fonts") || sections.includes("neutral") || sections.includes("brand") ? "- `src/index.css` — font imports and `@theme` wiring\n" : ""}${sections.some((s) => s !== "fonts") ? "- `src/styles/theme.css` — token and layer overrides\n" : ""}
+## 3. No component edits required
+
+All customization is via CSS variables in \`theme.css\`. Do not modify \`components/ui/*\`.
+`
+}
+
+export function generateIndexCss(config: ThemeConfig): string {
+  const imports = [
+    '@import "tailwindcss";',
+    '@import "tw-animate-css";',
+    '@import "shadcn/tailwind.css";',
+    '@import "./styles/theme.css";',
+    ...fontImports(config),
+  ]
+
+  const sans = fontFamily(config, "sans")
+  const heading = fontFamily(config, "heading")
+  const mono = fontFamily(config, "mono")
+
+  return `${imports.join("\n")}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-family-sans: ${sans};
+  --font-family-heading: ${heading};
+  --font-family-mono: ${mono};
+}
+
+@theme inline {
+    --font-sans: var(--font-family-sans);
+    --font-heading: var(--font-family-heading);
+    --font-mono: var(--font-family-mono);
+${THEME_INLINE_SEMANTIC_COLORS}
     --color-neutral-50: var(--neutral-50);
     --color-neutral-100: var(--neutral-100);
     --color-neutral-200: var(--neutral-200);
@@ -1135,13 +1245,7 @@ export function generateIndexCss(config: ThemeConfig): string {
     --color-brand-900: var(--brand-900);
     --color-brand-950: var(--brand-950);
     --color-brand-highlight: var(--brand-highlight, var(--brand-500));
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+${THEME_INLINE_RADIUS_SCALE}
 }
 
 @layer base {
@@ -1196,63 +1300,227 @@ All customization is via CSS variables in \`theme.css\`. Do not modify \`compone
 `
 }
 
-function bundleSection(title: string, css: string): string {
-  return `/* ─── ${title} ─── */\n${css.trim()}`
+function fontImportsForRoles(
+  config: ThemeConfig,
+  roles: readonly ("sans" | "heading" | "mono")[],
+): string[] {
+  const packages = new Set<string>()
+  for (const role of roles) {
+    const font = getFontById(config.fonts[role])
+    if (font) packages.add(font.packageName)
+  }
+  return [...packages].map((pkg) => `@import "${pkg}";`)
 }
 
-export function generateThemeBundleCss(config: ThemeConfig): string {
-  const sections = [
-    bundleSection("Neutral ramp", generateNeutralCss(config)),
-    bundleSection("Brand ramp", generateBrandCss(config)),
-  ]
+function getChangedFontRoles(
+  config: ThemeConfig,
+  baseline: ThemeConfig,
+): ("sans" | "heading" | "mono")[] {
+  return (["sans", "heading", "mono"] as const).filter(
+    (role) => config.fonts[role] !== baseline.fonts[role],
+  )
+}
 
-  if (config.layers.brandSemantic) {
-    sections.push(bundleSection("Semantic tokens", generateBrandSemanticCss(config)))
-  } else {
-    sections.push(bundleSection("Preset semantics", generateThemeCss(config)))
+function generateFontPatchBody(
+  config: ThemeConfig,
+  baseline: ThemeConfig,
+): string | null {
+  const roles = getChangedFontRoles(config, baseline)
+  if (roles.length === 0) return null
+
+  const blocks: string[] = [...fontImportsForRoles(config, roles)]
+
+  const rootVars = roles.map((role) => {
+    const varName =
+      role === "sans"
+        ? "--font-family-sans"
+        : role === "heading"
+          ? "--font-family-heading"
+          : "--font-family-mono"
+    return `  ${varName}: ${fontFamily(config, role)};`
+  })
+  blocks.push(`:root {\n${rootVars.join("\n")}\n}`)
+
+  const themeVars = roles.map((role) => {
+    const themeName =
+      role === "sans"
+        ? "--font-sans"
+        : role === "heading"
+          ? "--font-heading"
+          : "--font-mono"
+    const familyVar =
+      role === "sans"
+        ? "--font-family-sans"
+        : role === "heading"
+          ? "--font-family-heading"
+          : "--font-family-mono"
+    return `  ${themeName}: var(${familyVar});`
+  })
+  blocks.push(`@theme inline {\n${themeVars.join("\n")}\n}`)
+
+  const baseRules: string[] = []
+  if (roles.includes("sans")) {
+    baseRules.push("  html { @apply font-sans; }")
+  }
+  if (roles.includes("heading")) {
+    baseRules.push(
+      "  h1, h2, h3, h4, h5, h6, .font-heading { @apply font-heading; }",
+    )
+  }
+  if (roles.includes("mono")) {
+    baseRules.push("  code, kbd, pre, samp, .font-mono { @apply font-mono; }")
+  }
+  if (baseRules.length > 0) {
+    blocks.push(`@layer base {\n${baseRules.join("\n")}\n}`)
   }
 
-  if (config.layers.surfaces) {
-    sections.push(bundleSection("Surfaces", generateSurfacesCss(config)))
-    sections.push(bundleSection("Personality", generatePersonalityCss(config)))
-  }
-  if (config.layers.menus) {
-    sections.push(bundleSection("Menus", generateMenusCss(config)))
-  }
-  if (config.layers.focus) {
-    sections.push(bundleSection("Focus", generateFocusCss(config)))
-  }
-  if (config.layers.density) {
-    sections.push(bundleSection("Density", generateDensityCss(config)))
-  }
-  if (config.layers.overlays) {
-    sections.push(bundleSection("Overlays", generateOverlaysCss(config)))
-  }
-  if (config.layers.typography) {
-    sections.push(bundleSection("Typography", generateTypographyCss(config)))
-  }
-  if (config.layers.brandPresets) {
-    sections.push(bundleSection("Brand presets", generateBrandPresetsCss()))
+  return blocks.join("\n\n")
+}
+
+/** Snippet to merge into an existing src/index.css — never re-exports stock shadcn boilerplate. */
+export function generateIndexPatch(
+  config: ThemeConfig,
+  sections: ExportSection[],
+  baseline: ThemeConfig = getExportBaseline(),
+): string | null {
+  const blocks: string[] = []
+
+  if (sections.includes("fonts")) {
+    const fontPatch = generateFontPatchBody(config, baseline)
+    if (fontPatch) blocks.push(fontPatch)
   }
 
-  return `/**
- * Theme bundle — neutrals, brand, semantics, and optional layers.
- * Imported from src/index.css. Edit sections below to tune your design system.
- */
-${sections.join("\n\n")}
-`
+  if (sections.includes("neutral") || sections.includes("brand")) {
+    blocks.push(`@theme inline {${neutralBrandThemeLines()}\n}`)
+  }
+
+  if (blocks.length === 0) return null
+
+  return `/* Add to src/index.css */\n\n${blocks.join("\n\n")}`
+}
+
+/** Snippet to merge into an existing src/styles/theme.css — only changed sections. */
+export function generateThemePatch(
+  config: ThemeConfig,
+  sections: ExportSection[],
+): string | null {
+  const blocks: string[] = []
+
+  if (
+    sections.includes("semantic") ||
+    sections.includes("neutral") ||
+    sections.includes("brand")
+  ) {
+    if (sections.includes("semantic")) {
+      blocks.push(generateNeutralCss(config).trim())
+      blocks.push(generateBrandCss(config).trim())
+      blocks.push(generateBrandSemanticCss(config).trim())
+    } else {
+      if (sections.includes("neutral")) {
+        blocks.push(generateNeutralCss(config).trim())
+      }
+      if (sections.includes("brand")) {
+        blocks.push(generateBrandCss(config).trim())
+      }
+    }
+  }
+
+  if (sections.includes("radius")) {
+    blocks.push(`:root {\n  --radius: ${config.radius};\n}`)
+  }
+
+  if (sections.includes("surfaces")) {
+    blocks.push(generateSurfacesCss(config).trim())
+  }
+  if (sections.includes("personality")) {
+    blocks.push(generatePersonalityCss(config).trim())
+  }
+  if (sections.includes("menus")) {
+    blocks.push(generateMenusCss(config).trim())
+  }
+  if (sections.includes("focus")) {
+    blocks.push(generateFocusCss(config).trim())
+  }
+  if (sections.includes("density")) {
+    blocks.push(generateDensityCss(config).trim())
+  }
+  if (sections.includes("overlays")) {
+    blocks.push(generateOverlaysCss(config).trim())
+  }
+  if (sections.includes("typography")) {
+    blocks.push(generateTypographyCss(config).trim())
+  }
+  if (sections.includes("brandPresets")) {
+    blocks.push(generateBrandPresetsCss().trim())
+  }
+
+  if (blocks.length === 0) return null
+
+  return `/* Add to src/styles/theme.css */\n\n${blocks.join("\n\n")}`
+}
+
+function neutralBrandThemeLines(): string {
+  return `
+    --color-neutral-50: var(--neutral-50);
+    --color-neutral-100: var(--neutral-100);
+    --color-neutral-200: var(--neutral-200);
+    --color-neutral-300: var(--neutral-300);
+    --color-neutral-400: var(--neutral-400);
+    --color-neutral-500: var(--neutral-500);
+    --color-neutral-600: var(--neutral-600);
+    --color-neutral-700: var(--neutral-700);
+    --color-neutral-800: var(--neutral-800);
+    --color-neutral-900: var(--neutral-900);
+    --color-neutral-950: var(--neutral-950);
+    --color-brand-50: var(--brand-50);
+    --color-brand-100: var(--brand-100);
+    --color-brand-200: var(--brand-200);
+    --color-brand-300: var(--brand-300);
+    --color-brand-400: var(--brand-400);
+    --color-brand-500: var(--brand-500);
+    --color-brand-600: var(--brand-600);
+    --color-brand-700: var(--brand-700);
+    --color-brand-800: var(--brand-800);
+    --color-brand-900: var(--brand-900);
+    --color-brand-950: var(--brand-950);
+    --color-brand-highlight: var(--brand-highlight, var(--brand-500));`
+}
+
+export function generateThemeBundleFromSections(
+  config: ThemeConfig,
+  sections: ExportSection[],
+): string | null {
+  return generateThemePatch(config, sections)
 }
 
 export type GeneratedThemeFiles = {
-  index: string
-  theme: string
+  isEmpty: boolean
+  sections: ExportSection[]
+  index: string | null
+  theme: string | null
   quickStart: string
 }
 
 export function generateAll(config: ThemeConfig): GeneratedThemeFiles {
+  const sections = getChangedExportSections(config)
+
+  if (sections.length === 0) {
+    return {
+      isEmpty: true,
+      sections: [],
+      index: null,
+      theme: null,
+      quickStart: generateEmptyQuickStartMd(),
+    }
+  }
+
+  const baseline = getExportBaseline()
+
   return {
-    index: generateIndexCss(config),
-    theme: generateThemeBundleCss(config),
-    quickStart: generateQuickStartMd(config),
+    isEmpty: false,
+    sections,
+    index: generateIndexPatch(config, sections, baseline),
+    theme: generateThemePatch(config, sections),
+    quickStart: generateQuickStartFromSections(config, sections),
   }
 }

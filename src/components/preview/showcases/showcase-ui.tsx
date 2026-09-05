@@ -3,6 +3,7 @@ import type { ReactNode } from "react"
 
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { stockPhotoUrl, type StockPhotoVariant } from "@/lib/stock-media"
 
 /** Card surface presets — personality layer overrides chrome when active. */
 export const showcaseCard = {
@@ -30,6 +31,8 @@ type MediaFrameProps = {
   aspect?: "video" | "square" | "wide" | "portrait"
   tint?: "default" | "editorial" | "media" | "warm"
   className?: string
+  seed?: string
+  alt?: string
 }
 
 const aspectClass = {
@@ -39,27 +42,36 @@ const aspectClass = {
   portrait: "aspect-[4/5]",
 } as const
 
-const tintClass = {
-  default: "from-muted via-muted/70 to-background",
-  editorial: "from-primary/12 via-muted/80 to-muted/30",
-  media: "from-muted via-primary/8 to-muted/40",
-  warm: "from-amber-500/10 via-muted to-muted/50",
-} as const
+const tintVariant = {
+  default: "product",
+  editorial: "editorial",
+  media: "tech",
+  warm: "warm",
+} as const satisfies Record<NonNullable<MediaFrameProps["tint"]>, StockPhotoVariant>
 
 export function MediaFrame({
   aspect = "video",
   tint = "default",
   className,
+  seed = "showcase",
+  alt = "",
 }: MediaFrameProps) {
   return (
     <div
       className={cn(
-        "w-full bg-gradient-to-br",
+        "relative w-full overflow-hidden bg-muted",
         aspectClass[aspect],
-        tintClass[tint],
         className,
       )}
-    />
+    >
+      <img
+        src={stockPhotoUrl(tintVariant[tint], seed, 1200)}
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
   )
 }
 

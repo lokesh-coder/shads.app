@@ -1,16 +1,9 @@
 import { useState } from "react"
 
-import { BaseControls } from "@/components/controls/BaseControls"
-import { BrandControls } from "@/components/controls/BrandControls"
-import { FocusControls } from "@/components/controls/FocusControls"
+import { AdvancedControls } from "@/components/controls/AdvancedControls"
+import { ColorsControls } from "@/components/controls/ColorsControls"
 import { GlobalPresetControls } from "@/components/controls/GlobalPresetControls"
-import { LayersControls } from "@/components/controls/LayersControls"
-import { MenusControls } from "@/components/controls/MenusControls"
-import { OverlaysControls } from "@/components/controls/OverlaysControls"
-import { RadiusControls } from "@/components/controls/RadiusControls"
-import { SemanticMappingControls } from "@/components/controls/SemanticMappingControls"
-import { SpacingControls } from "@/components/controls/SpacingControls"
-import { SurfacesControls } from "@/components/controls/SurfacesControls"
+import { LayoutFeelControls } from "@/components/controls/LayoutFeelControls"
 import { TypographyControls } from "@/components/controls/TypographyControls"
 import { ExportPanel } from "@/components/export/ExportPanel"
 import { AppSettingsDialog } from "@/components/settings/AppSettingsDialog"
@@ -27,44 +20,46 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import type { ThemeConfig } from "@/lib/theme-config"
+import { SITE } from "@/lib/site-meta"
 import { cn } from "@/lib/utils"
 import {
   BoxIcon,
-  CircleIcon,
   CodeIcon,
-  FocusIcon,
-  GitBranchIcon,
-  Layers2Icon,
-  MenuIcon,
   PaletteIcon,
-  PipetteIcon,
+  Share2Icon,
+  SlidersHorizontalIcon,
   SparklesIcon,
-  SquareIcon,
   TypeIcon,
-  WorkflowIcon,
   XIcon,
 } from "lucide-react"
+
+function GitHubMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="currentColor"
+    >
+      <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.178 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2Z" />
+    </svg>
+  )
+}
 
 type ControlsRailProps = {
   config: ThemeConfig
   onChange: (config: ThemeConfig) => void
   isDark: boolean
   onDarkChange: (value: boolean) => void
+  onShare: () => void | Promise<void>
 }
 
 type ControlSectionId =
   | "theme"
-  | "spacing"
-  | "radius"
+  | "colors"
+  | "layout"
   | "typography"
-  | "surfaces"
-  | "overlays"
-  | "menus"
-  | "focus"
-  | "brand"
-  | "base"
-  | "semantic"
-  | "layers"
+  | "advanced"
 
 const SECTIONS: {
   id: ControlSectionId
@@ -72,17 +67,10 @@ const SECTIONS: {
   icon: typeof SparklesIcon
 }[] = [
   { id: "theme", label: "Theme", icon: SparklesIcon },
-  { id: "spacing", label: "Spacing", icon: SquareIcon },
-  { id: "radius", label: "Radius", icon: CircleIcon },
-  { id: "typography", label: "Typography", icon: TypeIcon },
-  { id: "surfaces", label: "Surfaces", icon: BoxIcon },
-  { id: "overlays", label: "Overlays", icon: WorkflowIcon },
-  { id: "menus", label: "Menus", icon: MenuIcon },
-  { id: "focus", label: "Focus", icon: FocusIcon },
-  { id: "brand", label: "Brand", icon: PaletteIcon },
-  { id: "base", label: "Base", icon: PipetteIcon },
-  { id: "semantic", label: "Semantic", icon: GitBranchIcon },
-  { id: "layers", label: "Layers", icon: Layers2Icon },
+  { id: "colors", label: "Colors", icon: PaletteIcon },
+  { id: "layout", label: "Layout & feel", icon: BoxIcon },
+  { id: "typography", label: "Type", icon: TypeIcon },
+  { id: "advanced", label: "Advanced", icon: SlidersHorizontalIcon },
 ]
 
 export function ControlsRail({
@@ -90,6 +78,7 @@ export function ControlsRail({
   onChange,
   isDark,
   onDarkChange,
+  onShare,
 }: ControlsRailProps) {
   const [active, setActive] = useState<ControlSectionId | null>("theme")
 
@@ -104,17 +93,17 @@ export function ControlsRail({
             embedded={embedded}
           />
         )
-      case "spacing":
+      case "colors":
         return (
-          <SpacingControls
+          <ColorsControls
             config={config}
             onChange={onChange}
             embedded={embedded}
           />
         )
-      case "radius":
+      case "layout":
         return (
-          <RadiusControls
+          <LayoutFeelControls
             config={config}
             onChange={onChange}
             embedded={embedded}
@@ -128,49 +117,9 @@ export function ControlsRail({
             embedded={embedded}
           />
         )
-      case "surfaces":
+      case "advanced":
         return (
-          <SurfacesControls
-            config={config}
-            onChange={onChange}
-            embedded={embedded}
-          />
-        )
-      case "overlays":
-        return (
-          <OverlaysControls
-            config={config}
-            onChange={onChange}
-            embedded={embedded}
-          />
-        )
-      case "menus":
-        return (
-          <MenusControls config={config} onChange={onChange} embedded={embedded} />
-        )
-      case "focus":
-        return (
-          <FocusControls config={config} onChange={onChange} embedded={embedded} />
-        )
-      case "brand":
-        return (
-          <BrandControls config={config} onChange={onChange} embedded={embedded} />
-        )
-      case "base":
-        return (
-          <BaseControls config={config} onChange={onChange} embedded={embedded} />
-        )
-      case "semantic":
-        return (
-          <SemanticMappingControls
-            config={config}
-            onChange={onChange}
-            embedded={embedded}
-          />
-        )
-      case "layers":
-        return (
-          <LayersControls
+          <AdvancedControls
             config={config}
             onChange={onChange}
             embedded={embedded}
@@ -185,33 +134,18 @@ export function ControlsRail({
 
   return (
     <div className="flex h-full shrink-0">
-      <aside
-        className={cn(
-          "flex flex-col border-l border-border bg-background transition-[width] duration-200 ease-out",
-          active ? "w-72" : "w-0 overflow-hidden border-l-0",
-        )}
-      >
-        {active && activeSection ? (
-          <>
-            <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
-              <h2 className="text-sm font-medium">{activeSection.label}</h2>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setActive(null)}
-                aria-label="Close panel"
-              >
-                <XIcon />
-              </Button>
-            </div>
-            <ScrollArea className="min-h-0 flex-1">
-              <div className="p-3">{renderPanel()}</div>
-            </ScrollArea>
-          </>
-        ) : null}
-      </aside>
+      <nav className="flex w-[3.25rem] shrink-0 flex-col border-r border-border bg-background py-2">
+        <a
+          href="/"
+          className="mb-2 flex flex-col items-center gap-1 border-b border-border px-1 pb-3"
+          aria-label={SITE.name}
+        >
+          <img src="/favicon.svg" alt="" className="size-7" />
+          <span className="text-[9px] font-semibold tracking-tight text-foreground/80">
+            shads
+          </span>
+        </a>
 
-      <nav className="flex w-12 shrink-0 flex-col border-l border-border bg-background py-2">
         <div className="flex flex-col items-center gap-1">
           {SECTIONS.map((section) => {
             const Icon = section.icon
@@ -235,13 +169,30 @@ export function ControlsRail({
                 >
                   <Icon />
                 </TooltipTrigger>
-                <TooltipContent side="left">{section.label}</TooltipContent>
+                <TooltipContent side="right">{section.label}</TooltipContent>
               </Tooltip>
             )
           })}
         </div>
 
         <div className="mt-auto flex flex-col items-center gap-1 border-t border-border pt-2">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="size-9"
+                  aria-label="Share link"
+                  onClick={() => void onShare()}
+                />
+              }
+            >
+              <Share2Icon />
+            </TooltipTrigger>
+            <TooltipContent side="right">Share link</TooltipContent>
+          </Tooltip>
+
           <Dialog>
             <Tooltip>
               <TooltipTrigger
@@ -260,7 +211,7 @@ export function ControlsRail({
               >
                 <CodeIcon />
               </TooltipTrigger>
-              <TooltipContent side="left">Export</TooltipContent>
+              <TooltipContent side="right">Export</TooltipContent>
             </Tooltip>
             <DialogContent
               showCloseButton
@@ -270,12 +221,57 @@ export function ControlsRail({
             </DialogContent>
           </Dialog>
 
-          <AppSettingsDialog
-            isDark={isDark}
-            onDarkChange={onDarkChange}
-          />
+          <AppSettingsDialog isDark={isDark} onDarkChange={onDarkChange} />
+
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <a
+                  href={SITE.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View on GitHub"
+                  className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                />
+              }
+            >
+              <GitHubMark className="size-4" />
+            </TooltipTrigger>
+            <TooltipContent side="right">GitHub</TooltipContent>
+          </Tooltip>
         </div>
       </nav>
+
+      <aside
+        className={cn(
+          "flex flex-col border-r border-border bg-background transition-[width] duration-200 ease-out",
+          active ? "w-72" : "w-0 overflow-hidden border-r-0",
+        )}
+      >
+        {active && activeSection ? (
+          <>
+            <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
+              <div>
+                <p className="text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
+                  {SITE.name}
+                </p>
+                <h2 className="text-sm font-medium">{activeSection.label}</h2>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setActive(null)}
+                aria-label="Close panel"
+              >
+                <XIcon />
+              </Button>
+            </div>
+            <ScrollArea className="min-h-0 flex-1">
+              <div className="p-3">{renderPanel()}</div>
+            </ScrollArea>
+          </>
+        ) : null}
+      </aside>
     </div>
   )
 }

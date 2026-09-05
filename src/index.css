@@ -1,25 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "./styles/neutral.css";
-@import "./styles/brand.css";
-@import "./styles/theme.css";
-/* Optional: wire semantic tokens to brand — comment out to use preset OKLCH only */
-@import "./styles/brand-semantic.css";
-/* Optional: premium elevation shadows — comment out for default Tailwind shadows */
-@import "./styles/surfaces.css";
-/* Optional: comfortable menu item spacing — comment out for shadcn defaults */
-@import "./styles/menus.css";
-/* Optional: calmer input focus — border + soft shadow instead of ring-3 */
-@import "./styles/focus.css";
-/* Optional: control density — button/input heights and padding */
-@import "./styles/density.css";
-/* Optional: themed modal overlays — comment out for bg-black/10 default */
-@import "./styles/overlays.css";
-/* Optional: font-heading on h1–h6 — comment out to use body font on headings */
-@import "./styles/typography.css";
-/* Optional: root type scale and icon stroke — comment out for browser default sizing */
-@import "./styles/type-scale.css";
+/* App shell only — preview theme is injected at runtime into #theme-preview-root */
+@import "./styles/app-shell.css";
 @import "@fontsource-variable/figtree";
 @import "@fontsource-variable/instrument-sans";
 @import "@fontsource-variable/geist-mono";

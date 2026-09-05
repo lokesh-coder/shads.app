@@ -1,10 +1,9 @@
 import type { PreviewEntry } from "@/components/preview/preview-registry"
-import { getPreviewCategory } from "@/components/preview/preview-labels"
 
-/** Structured gallery pages — primitives first, then product UI, domain, states. */
-export const PREVIEW_PAGE_COUNT = 4
+/** Component gallery buckets — primitives and composed UI. Template is a separate page. */
+export const PREVIEW_PAGE_COUNT = 2
 
-const PRIMITIVE_IDS = new Set([
+export const PRIMITIVE_IDS = new Set([
   "actions",
   "button-groups",
   "icons",
@@ -34,59 +33,25 @@ const PRIMITIVE_IDS = new Set([
   "scroll-area",
 ])
 
-const PRODUCT_SCENARIO_IDS = new Set([
-  "auth",
-  "signup",
-  "forgot-password",
-  "otp-verify",
-  "magic-link",
-  "profile-edit",
-  "delete-account",
-  "api-key",
-  "shipping-address",
-  "payment-method",
-  "order-summary",
-  "cart-item",
-  "coupon-code",
-  "billing-plan",
-  "pricing-card",
-  "success-receipt",
-  "upgrade-prompt",
-  "invite-team",
-  "team-member",
-  "assignee-picker",
-  "permissions",
-  "comment",
-  "activity-item",
-  "project-status",
-  "schedule-meeting",
-  "notification-settings",
-  "cookie-banner",
-  "search-filters",
-  "export-data",
-  "file-upload",
+const OVERLAY_PRIMITIVE_IDS = new Set([
+  "alert-dialog",
+  "dialogs",
+  "popovers",
+  "sheet",
+  "toast",
+  "menus",
 ])
 
-const STATE_MARKETING_IDS = new Set([
-  "empty-state",
-  "error-state",
-  "onboarding",
-  "report-bug",
-  "maintenance",
-  "newsletter",
-  "waitlist",
-  "hero-cta",
-  "testimonial",
-  "feature-highlight",
-  "kpi-stats",
-])
+export function isPrimitiveId(id: string): boolean {
+  return PRIMITIVE_IDS.has(id)
+}
+
+export function isOverlayPrimitive(id: string): boolean {
+  return OVERLAY_PRIMITIVE_IDS.has(id)
+}
 
 function previewPageIndex(id: string): number {
-  if (PRIMITIVE_IDS.has(id)) return 0
-  if (PRODUCT_SCENARIO_IDS.has(id)) return 1
-  if (STATE_MARKETING_IDS.has(id)) return 3
-  if (getPreviewCategory(id)) return 2
-  return 2
+  return PRIMITIVE_IDS.has(id) ? 0 : 1
 }
 
 export function paginatePreviewEntries(entries: PreviewEntry[]): PreviewEntry[][] {

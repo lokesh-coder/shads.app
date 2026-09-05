@@ -1,6 +1,6 @@
 import { CameraIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -27,10 +27,11 @@ export function ProfileEditShowcase() {
       <CardContent>
         <ShowcaseContent>
           <div className="flex items-center gap-3">
-            <Avatar className="size-14 ring-2 ring-border/60">
-              <AvatarImage src="" alt="Alex" />
-              <AvatarFallback>AK</AvatarFallback>
-            </Avatar>
+            <PersonAvatar
+              name="Alex Kim"
+              seed="Alex Kim"
+              className="size-14 ring-2 ring-border/60"
+            />
             <div className="flex flex-col gap-1">
               <Button variant="outline" size="sm">
                 <CameraIcon data-icon="inline-start" />

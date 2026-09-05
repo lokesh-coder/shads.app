@@ -1,0 +1,8 @@
+/**
+ * Fixed design tokens for the theme-builder app shell (controls rail, dialogs, toasts).
+ * User-generated theme preview is scoped to #theme-preview-root and never touches these.
+ */
+@import "./neutral.css";
+@import "./brand.css";
+@import "./theme.css";
+@import "./brand-semantic.css";

@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { CheckIcon, CopyIcon, RotateCcwIcon } from "lucide-react"
 
 import { ExportCodeView } from "@/components/export/ExportCodeView"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   DialogDescription,
@@ -9,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { EXPORT_SECTION_LABELS } from "@/lib/export-plan"
 import { generateAll } from "@/lib/theme-codegen"
 import type { ThemeConfig } from "@/lib/theme-config"
 import { resetConfig } from "@/lib/theme-config"
@@ -31,29 +33,60 @@ async function copyText(text: string): Promise<void> {
 
 export function ExportPanel({ config, onReset }: ExportPanelProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState("index")
   const generated = useMemo(() => generateAll(config), [config])
 
-  const tabs: ExportTab[] = [
-    { id: "index", label: "index.css", content: generated.index, language: "css" },
-    {
-      id: "theme",
-      label: "styles/theme.css",
-      content: generated.theme,
-      language: "css",
-    },
-    {
+  const tabs: ExportTab[] = useMemo(() => {
+    if (generated.isEmpty) {
+      return [
+        {
+          id: "quickstart",
+          label: "Quick Start",
+          content: generated.quickStart,
+          language: "markdown",
+        },
+      ]
+    }
+
+    const result: ExportTab[] = []
+    if (generated.index) {
+      result.push({
+        id: "index",
+        label: "index.css",
+        content: generated.index,
+        language: "css",
+      })
+    }
+    if (generated.theme) {
+      result.push({
+        id: "theme",
+        label: "styles/theme.css",
+        content: generated.theme,
+        language: "css",
+      })
+    }
+    result.push({
       id: "quickstart",
       label: "Quick Start",
       content: generated.quickStart,
       language: "markdown",
-    },
-  ]
+    })
+    return result
+  }, [generated])
 
-  const copyAllContent = tabs
-    .filter((tab) => tab.id !== "quickstart")
-    .map((tab) => `/* ${tab.label} */\n${tab.content}`)
-    .join("\n\n")
+  const [activeTab, setActiveTab] = useState("index")
+
+  useEffect(() => {
+    if (tabs.length > 0 && !tabs.some((tab) => tab.id === activeTab)) {
+      setActiveTab(tabs[0]?.id ?? "quickstart")
+    }
+  }, [activeTab, tabs])
+
+  const copyAllContent = generated.isEmpty
+    ? ""
+    : tabs
+        .filter((tab) => tab.id !== "quickstart")
+        .map((tab) => `/* ${tab.label} */\n${tab.content}`)
+        .join("\n\n")
 
   const handleCopy = async (text: string, id: string) => {
     await copyText(text)
@@ -68,15 +101,37 @@ export function ExportPanel({ config, onReset }: ExportPanelProps) {
           <div>
             <DialogTitle className="text-lg">Export theme</DialogTitle>
             <DialogDescription>
-              Copy two files into your project:{" "}
-              <span className="font-mono text-foreground">index.css</span> and{" "}
-              <span className="font-mono text-foreground">styles/theme.css</span>.
+              {generated.isEmpty ? (
+                <>
+                  Your theme matches stock shadcn — nothing custom to export.
+                </>
+              ) : (
+                <>
+                  Merge these snippets into your existing shadcn{" "}
+                  {generated.index && generated.theme
+                    ? "index.css and theme.css"
+                    : generated.index
+                      ? "index.css"
+                      : "theme.css"}
+                  .
+                </>
+              )}
             </DialogDescription>
+            {!generated.isEmpty && generated.sections.length > 0 ? (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {generated.sections.map((section) => (
+                  <Badge key={section} variant="secondary" className="text-xs">
+                    {EXPORT_SECTION_LABELS[section]}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
           </div>
           <div className="flex shrink-0 gap-2">
             <Button
               variant="outline"
               size="sm"
+              disabled={generated.isEmpty}
               onClick={() => handleCopy(copyAllContent, "all")}
             >
               {copiedId === "all" ? (
@@ -87,7 +142,7 @@ export function ExportPanel({ config, onReset }: ExportPanelProps) {
               ) : (
                 <>
                   <CopyIcon data-icon="inline-start" />
-                  Copy all CSS
+                  Copy all snippets
                 </>
               )}
             </Button>
@@ -104,7 +159,13 @@ export function ExportPanel({ config, onReset }: ExportPanelProps) {
       </DialogHeader>
 
       <Tabs
-        value={activeTab}
+        value={
+          generated.isEmpty
+            ? "quickstart"
+            : tabs.some((tab) => tab.id === activeTab)
+              ? activeTab
+              : (tabs[0]?.id ?? "quickstart")
+        }
         onValueChange={setActiveTab}
         className="flex min-h-0 flex-1 flex-col gap-0"
       >
@@ -138,6 +199,7 @@ export function ExportPanel({ config, onReset }: ExportPanelProps) {
               <Button
                 variant="outline"
                 size="sm"
+                disabled={generated.isEmpty && tab.id !== "quickstart"}
                 onClick={() => handleCopy(tab.content, tab.id)}
               >
                 {copiedId === tab.id ? (
@@ -148,12 +210,12 @@ export function ExportPanel({ config, onReset }: ExportPanelProps) {
                 ) : (
                   <>
                     <CopyIcon data-icon="inline-start" />
-                    Copy file
+                    Copy snippet
                   </>
                 )}
               </Button>
             </div>
-            {activeTab === tab.id ? (
+            {(generated.isEmpty ? "quickstart" : activeTab) === tab.id ? (
               <ExportCodeView
                 content={tab.content}
                 language={tab.language}

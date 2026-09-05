@@ -1,6 +1,6 @@
 import { GitCommitIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -50,11 +50,7 @@ export function ActivityItemShowcase() {
               {i > 0 ? <Separator className="my-1" /> : null}
               <ListRow
                 leading={
-                  <Avatar size="sm">
-                    <AvatarFallback className="text-xs">
-                      {event.user.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <PersonAvatar name={event.user} seed={event.user} size="sm" />
                 }
                 title={`${event.user} ${event.action}`}
                 description={event.time}

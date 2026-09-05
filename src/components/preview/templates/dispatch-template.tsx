@@ -7,7 +7,7 @@ import {
 } from "lucide-react"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -198,9 +198,7 @@ export function DispatchTemplate() {
                   className="flex items-center justify-between gap-3 rounded-lg border border-border/50 p-3"
                 >
                   <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarFallback className="text-xs">{person.initials}</AvatarFallback>
-                    </Avatar>
+                    <PersonAvatar name={person.name} seed={person.name} />
                     <div>
                       <p className="text-sm font-medium">{person.name}</p>
                       <p className="text-xs text-muted-foreground">{person.role}</p>

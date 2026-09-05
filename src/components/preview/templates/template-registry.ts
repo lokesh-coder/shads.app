@@ -40,6 +40,8 @@ export const TEMPLATE_BY_PRESET = {
   campus: CampusTemplate,
 } as const satisfies Record<GlobalPresetId, ComponentType>
 
-export const APP_TEMPLATE_PAGE_INDEX = 4
+export const APP_TEMPLATE_PAGE_INDEX = 2
 
-export const GALLERY_PAGE_COUNT = 5
+export const GALLERY_PAGE_COUNT = 3
+
+export const GALLERY_PAGE_LABELS = ["Primitives", "Components", "Template"] as const

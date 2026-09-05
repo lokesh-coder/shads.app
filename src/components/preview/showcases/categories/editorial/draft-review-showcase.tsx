@@ -1,6 +1,6 @@
 import { MessageSquareTextIcon, PencilIcon } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { PersonAvatar } from "@/components/media/person-avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -48,9 +48,12 @@ export function DraftReviewShowcase() {
             </div>
             <div className="flex -space-x-2">
               {reviewers.map((r) => (
-                <Avatar key={r.initials} className="size-7 ring-2 ring-card">
-                  <AvatarFallback className="text-xs">{r.initials}</AvatarFallback>
-                </Avatar>
+                <PersonAvatar
+                  key={r.initials}
+                  name={r.name}
+                  seed={r.name}
+                  className="size-7 ring-2 ring-card"
+                />
               ))}
             </div>
           </InsetPanel>
